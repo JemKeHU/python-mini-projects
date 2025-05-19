@@ -1,11 +1,5 @@
 from random import choice
 
-def generate_password(length, chars):
-    result = ""
-    for i in range(length):
-        result += choice(chars)
-    return result
-
 digits = "23456789"
 lowercase_letters = "abcdefghjkmnpqrstuvwxyz"
 uppercase_letters = "ABCDEFGHIJKMNPQRSTUVWXYZ"
@@ -13,24 +7,52 @@ punctuation = "!#$%&*+-=?@^_"
 bad_chars = "il1Lo0O"
 chars = ""
 
-password_num = int(input("How many passwords: "))
-password_length = int(input("Password length: "))
-digits_on = input("Include digits? (y/n) ")
-upper_on = input("Include uppercase letters? (y/n) ")
-lower_on = input("Include lowercase letters? (y/n) ")
-punct_on = input("Include punctiation characters? (y/n) ")
-ambig_on = input("Include ambiguous characters? (y/n) ")
+def generate_password(length, chars):
+    result = ""
+    for i in range(length):
+        result += choice(chars)
+    return result
 
-if digits_on == "y":
-    chars += digits
-if upper_on == "y":
-    chars += uppercase_letters
-if lower_on == "y":
-    chars += lowercase_letters
-if punct_on == "y":
-    chars += punctuation
-if ambig_on == "y":
-    chars += bad_chars
+def yes_or_no(prompt):
+    while True:
+        answer = input(prompt + " (y/n): ").strip().lower()
+        if answer in ["y", "n"]:
+            return answer == "y"
+        print("Please enter 'y' or 'n'")
 
-for i in range(password_num):
-    print(generate_password(password_length, chars))
+def get_pref():
+    count = int(input("How many passwords to generate? "))
+    length = int(input("Length of each password? "))
+    digits_on = yes_or_no("Include digits")
+    upper_on = yes_or_no("Include uppercase letters")
+    lower_on = yes_or_no("Include lowercase letters")
+    punct_on = yes_or_no("Include punctuation letters")
+    ambig_on = yes_or_no("Include ambiguous letters")
+    return count, length, digits_on, upper_on, lower_on, punct_on, ambig_on
+
+def chars_set(dig, up, low, punc, amb):
+    chars = ""
+    if dig:
+        chars += digits
+    if up:
+        chars += uppercase_letters
+    if low:
+        chars += lowercase_letters
+    if punc:
+        chars += punctuation
+    if amb:
+        chars += bad_chars
+    return chars
+
+def main():
+    count, length, use_digits, use_upper, use_lower, use_punct, use_ambiguous = get_pref()
+    chars = chars_set(use_digits, use_upper, use_lower, use_punct, use_ambiguous)
+
+    if not chars:
+        print("No character types selected. Cannot generate password.")
+        return 
+
+    for i in range(count):
+        print(generate_password(length, chars))
+
+main()
