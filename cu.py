@@ -1,11 +1,5 @@
 from random import randint
 
-def is_valid(st):
-    if st.isdigit() and 1 <= int(st) <= second_num:
-        return int(st)
-    else:
-        print(f"Type in a NUMBER from 1 to {second_num}")
-
 def get_range():
     while True:
         print("Type in a second number:")
@@ -16,10 +10,10 @@ def get_range():
             print("Please type in a NUMBER greater than 1!")
 
 def start_game():
-    global second_num, random_number
     second_num = get_range()
     random_number = randint(1, second_num)
     print(f"Guess a number from 1 to {second_num}")
+    return second_num, random_number
 
 def continue_game():
     while True:
@@ -27,13 +21,14 @@ def continue_game():
         choice = input()
         return choice.lower() == "y"
 
-def compare():
+def compare(second_num, random_number):
     try_count = 0
     while True:
         num = input()
-        if is_valid(num):
+        if num.isdigit() and 1 <= int(num) <= second_num:
             num = int(num)
         else:
+            print(f"Type in a NUMBER from 1 to {second_num}")
             continue
         if num > random_number:
             try_count += 1
@@ -51,12 +46,10 @@ def compare():
 
 def game():
     print("Welcome to the number guessing game!")
-    start_game()
     while True:
-        compare()
-        if continue_game():
-            start_game()
-        else:
+        s_n, r_n = start_game()
+        compare(s_n, r_n)
+        if not continue_game():
             break
     print("Thanks for playing, see you next time!")
 
