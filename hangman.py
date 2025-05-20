@@ -13,12 +13,6 @@ word_list = [
     "snowman", "train", "violin", "whistle", "yarn", "zipper"
 ]
 
-def break_string(string):
-    res = []
-    for char in string:
-        res.append(char)
-    return res
-
 def display_hangman(tries):
     stages = [  
                 '''
@@ -104,11 +98,12 @@ def play(word):
     guessed_words = []
     tries = 6
     print("Let's play a word guessing game!")
+    print(f"This is your word - {word_completion}! Hah guess it dummy!:)")
     while True:
         user_input = handle_input()
 
         if user_input in word and len(user_input) == 1 and not user_input in guessed_letters:
-            word_completion = break_string(word_completion)
+            word_completion = list(word_completion)
             for i in range(len(word)):
                 if word[i] == user_input:
                     word_completion[i] = word[i]
@@ -125,6 +120,7 @@ def play(word):
             tries -= 1
 
         if tries == 0:
+            print(display_hangman(0))
             print("You lost!")
             print(f"The word is {word}")
             break
@@ -134,9 +130,14 @@ def play(word):
             break
 
         if len(user_input) == 1:
-            guessed_letters.append(user_input)
+            if user_input not in guessed_letters:
+                guessed_letters.append(user_input)
+            else:
+                print("You guessed it before!")
         else:
-            guessed_words.append(user_input)
+            if user_input not in guessed_words:
+                guessed_words.append(user_input)
+                print("You guessed it before!")
     
         print(display_hangman(tries))
         print(word_completion)
